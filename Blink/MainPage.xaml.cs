@@ -29,7 +29,7 @@ namespace Blink
             this.InitializeComponent();
             InitGPIO();
             mainTimer = new DispatcherTimer();
-            mainTimer.Interval = new TimeSpan(0, 0, 1);
+            mainTimer.Interval = new TimeSpan(0, 0, 5);
             mainTimer.Tick += MainTimer_Tick;
             mainTimer.Start(); 
         }
