@@ -22,14 +22,13 @@ namespace Blink
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class MainPage : Page
-    {
-        DispatcherTimer mainTimer = null; 
+    {        DispatcherTimer mainTimer = null; 
         public MainPage()
         {
             this.InitializeComponent();
             InitGPIO();
             mainTimer = new DispatcherTimer();
-            mainTimer.Interval = new TimeSpan(0, 0, 5);
+            mainTimer.Interval = new TimeSpan(0, 0, 1);
             mainTimer.Tick += MainTimer_Tick;
             mainTimer.Start(); 
         }
