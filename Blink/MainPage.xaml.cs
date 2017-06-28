@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,7 +29,7 @@ namespace Blink
             this.InitializeComponent();
             InitGPIO();
             mainTimer = new DispatcherTimer();
-            mainTimer.Interval = new TimeSpan(0, 0, 1);
+            mainTimer.Interval = new TimeSpan(0, 0, 3);
             mainTimer.Tick += MainTimer_Tick;
             mainTimer.Start(); 
         }
