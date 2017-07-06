@@ -1,8 +1,13 @@
+using Microsoft.Azure.Devices.Client;
+using Microsoft.Azure.Devices.Shared;
+using Microsoft.Devices.Management;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
+using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -30,7 +35,30 @@ namespace Blink
             mainTimer = new DispatcherTimer();
             mainTimer.Interval = new TimeSpan(0, 0, 1);
             mainTimer.Tick += MainTimer_Tick;
-            mainTimer.Start(); 
+            mainTimer.Start();
+            SendVersionNumberAsync().Wait();
+        }
+
+        public async Task SendVersionNumberAsync()
+        {
+            TpmDevice myDevice = new TpmDevice(0); // Use logical device 0 on the TPM
+            string hubUri = await  myDevice.GetConnectionStringAsync();
+            string deviceId = await myDevice.GetDeviceIdAsync();
+            string sasToken = await myDevice.GetSASTokenAsync();
+
+            var deviceClient = DeviceClient.Create(
+                hubUri,
+                AuthenticationMethodFactory.
+                    CreateAuthenticationWithToken(deviceId, sasToken), TransportType.Amqp);
+
+
+            TwinCollection reportedProperties, appinfo;
+            reportedProperties = new TwinCollection();
+            appinfo = new TwinCollection();
+            appinfo["versionnumber"] = "1.0.#{Build.BuildId}#.0";
+            reportedProperties["appinfo"] = appinfo;
+            await deviceClient.UpdateReportedPropertiesAsync(reportedProperties);
+
         }
 
         private void MainTimer_Tick(object sender, object e)
