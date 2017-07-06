@@ -47,7 +47,7 @@ namespace Blink
             mainTimer.Interval = new TimeSpan(0, 0, 1);
             mainTimer.Tick += MainTimer_Tick;
             mainTimer.Start();
-            SendVersionNumberAsync();
+            SendVersionNumberAsync().Wait();
         }
 
         public async Task SendVersionNumberAsync()
