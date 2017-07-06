@@ -99,7 +99,7 @@ namespace Blink
         }
 
         private int LEDStatus = 0;
-        private const int LED_PIN = 4;
+        private const int LED_PIN = 3;
         private GpioPin pin;
         private SolidColorBrush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
