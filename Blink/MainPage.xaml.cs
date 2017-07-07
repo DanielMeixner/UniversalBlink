@@ -37,7 +37,7 @@ namespace Blink
         }
 
         // change color here
-        private const int LED_PIN = (int)LedColors.Orange;
+        private const int LED_PIN = (int)LedColors.Red;
 
         private int LEDStatus = 0;
         private GpioPin pin;
