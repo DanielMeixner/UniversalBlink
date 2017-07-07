@@ -29,14 +29,21 @@ namespace Blink
     public sealed partial class MainPage : Page
     {
 
+        enum LedColors
+        {
+            Green =2,
+            Orange = 3, 
+            Red = 4
+        }
+
+        // change color here
+        private const int LED_PIN = (int)LedColors.Orange;
+
         private int LEDStatus = 0;
-        private const int LED_PIN = 3;
         private GpioPin pin;
         private SolidColorBrush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
         DispatcherTimer mainTimer = null;
-
-
 
 
         public MainPage()
@@ -47,40 +54,11 @@ namespace Blink
             mainTimer.Interval = new TimeSpan(0, 0, 1);
             mainTimer.Tick += MainTimer_Tick;
             mainTimer.Start();
-            SendVersionNumberAsync().Wait();
-        }
-
-        public async Task SendVersionNumberAsync()
-
-        {
-            try
-            {
-                TpmDevice myDevice = new TpmDevice(0); // Use logical device 0 on the TPM
-                string hubUri = await myDevice.GetConnectionStringAsync();
-                string deviceId = await myDevice.GetDeviceIdAsync();
-                string sasToken = await myDevice.GetSASTokenAsync();
-
-                var deviceClient = DeviceClient.Create(
-                    hubUri,
-                    AuthenticationMethodFactory.
-                        CreateAuthenticationWithToken(deviceId, sasToken), TransportType.Amqp);
-
-
-                TwinCollection reportedProperties, appinfo;
-                reportedProperties = new TwinCollection();
-                appinfo = new TwinCollection();
-                appinfo["versionnumber"] = "1.0.#{Build.BuildId}#.0";
-                reportedProperties["appinfo"] = appinfo;
-                await deviceClient.UpdateReportedPropertiesAsync(reportedProperties);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
 
 
         }
+
+     
 
         private void MainTimer_Tick(object sender, object e)
         {
