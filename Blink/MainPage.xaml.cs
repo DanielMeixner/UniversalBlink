@@ -1,6 +1,6 @@
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Shared;
-using Microsoft.Devices.Management;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
