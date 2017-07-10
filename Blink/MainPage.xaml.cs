@@ -78,11 +78,11 @@ namespace Blink
             {
                 Console.WriteLine("Sending version data as reported property");
 
-                TwinCollection reportedProperties, connectivity;
+                TwinCollection reportedProperties, appinfo;
                 reportedProperties = new TwinCollection();
-                connectivity = new TwinCollection();
-                connectivity["appversion"] = "1.0.#{Build.BuildId}#.0";
-                reportedProperties["connectivity"] = connectivity;
+                appinfo = new TwinCollection();
+                appinfo["appinfo"] = "1.0.#{Build.BuildId}#.0";
+                reportedProperties["appinfo"] = appinfo;
                 await Client.UpdateReportedPropertiesAsync(reportedProperties);
             }
             catch (Exception ex)
