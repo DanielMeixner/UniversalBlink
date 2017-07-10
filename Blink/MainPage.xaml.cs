@@ -1,12 +1,8 @@
-
 using System;
-using System.Collections.Generic;
 using Windows.Devices.Gpio;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-
-
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -26,7 +22,7 @@ namespace Blink
         }
 
         // change color here
-        private const int LED_PIN = (int)LedColors.Green;
+        private const int LED_PIN = (int)LedColors.Orange;
 
         private int LEDStatus = 0;
         private GpioPin pin;
@@ -34,9 +30,6 @@ namespace Blink
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
         DispatcherTimer mainTimer = null;
 
-
-        static string deviceConnectionString = String.Empty;
-        
 
         public MainPage()
         {
@@ -46,18 +39,15 @@ namespace Blink
             mainTimer.Interval = new TimeSpan(0, 0, 1);
             mainTimer.Tick += MainTimer_Tick;
             mainTimer.Start();
-                                           
+
+
         }
-          
 
-
-   
-
+     
 
         private void MainTimer_Tick(object sender, object e)
         {
             FlipLED();
-
         }
 
         private void InitGPIO()
@@ -80,19 +70,6 @@ namespace Blink
             GpioStatus.Text = "GPIO pin initialized correctly.";
         }
 
-        private string EnumToString(int icolor)
-        {
-            switch (icolor)
-            {
-                case 2:
-                    return "green";
-                case 3:
-                    return "orange";
-                default:
-                    return "red";
-            }
-        }
-
         private void FlipLED()
         {
             if (LEDStatus == 0)
@@ -104,8 +81,7 @@ namespace Blink
                     pin.Write(GpioPinValue.Low);
                 }
                 LED.Fill = redBrush;
-                StateText.Text = "On";               
-                
+                StateText.Text = "On";
             }
             else
             {
@@ -115,11 +91,17 @@ namespace Blink
                     pin.Write(GpioPinValue.High);
                 }
                 LED.Fill = grayBrush;
-                StateText.Text = "Off";                
+                StateText.Text = "Off";
             }
         }
 
- 
+        private void TurnOffLED()
+        {
+            if (LEDStatus == 1)
+            {
+                FlipLED();
+            }
+        }
         private void TurnOnLED()
         {
             if (LEDStatus == 0)
