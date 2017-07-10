@@ -6,9 +6,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
-using Microsoft.Azure.Devices.Client;
-using Microsoft.Azure.Devices.Shared;
-using Newtonsoft.Json;
 
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -39,7 +36,7 @@ namespace Blink
 
 
         static string deviceConnectionString = String.Empty;
-        static DeviceClient Client = null;
+        
 
         public MainPage()
         {
