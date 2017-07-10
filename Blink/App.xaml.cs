@@ -15,6 +15,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+using Microsoft.HockeyApp;
+
 namespace Blink
 {
     /// <summary>
@@ -30,6 +32,8 @@ namespace Blink
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            Microsoft.HockeyApp.HockeyClient.Current.Configure("7b7e7eba0c934ebf8542c558edd21d67");
         }
 
         /// <summary>
@@ -40,6 +44,8 @@ namespace Blink
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
+
+            HockeyClient.Current.TrackEvent("AppLaunched");
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active

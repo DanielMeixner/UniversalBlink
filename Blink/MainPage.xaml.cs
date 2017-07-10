@@ -1,4 +1,6 @@
+using Microsoft.HockeyApp;
 using System;
+using System.Collections.Generic;
 using Windows.Devices.Gpio;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -48,6 +50,7 @@ namespace Blink
         private void MainTimer_Tick(object sender, object e)
         {
             FlipLED();
+
         }
 
         private void InitGPIO()
@@ -70,6 +73,19 @@ namespace Blink
             GpioStatus.Text = "GPIO pin initialized correctly.";
         }
 
+        private string EnumToString(int icolor)
+        {
+            switch (icolor)
+            {
+                case 2:
+                    return "green";
+                case 3:
+                    return "orange";
+                default:
+                    return "red";
+            }
+        }
+
         private void FlipLED()
         {
             if (LEDStatus == 0)
@@ -82,6 +98,12 @@ namespace Blink
                 }
                 LED.Fill = redBrush;
                 StateText.Text = "On";
+
+                // Hockeytracking
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("color", EnumToString(LED_PIN));
+                dic.Add("status", "on");
+                HockeyClient.Current.TrackEvent("FlipLed", dic);
             }
             else
             {
@@ -92,16 +114,16 @@ namespace Blink
                 }
                 LED.Fill = grayBrush;
                 StateText.Text = "Off";
+
+                // Hockeytracking
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("color", EnumToString(LED_PIN));
+                dic.Add("status", "off");
+                HockeyClient.Current.TrackEvent("FlipLed", dic);
             }
         }
 
-        private void TurnOffLED()
-        {
-            if (LEDStatus == 1)
-            {
-                FlipLED();
-            }
-        }
+ 
         private void TurnOnLED()
         {
             if (LEDStatus == 0)
