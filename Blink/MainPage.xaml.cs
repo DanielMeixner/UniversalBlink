@@ -6,6 +6,11 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
+using Microsoft.Azure.Devices.Client;
+using Microsoft.Azure.Devices.Shared;
+using Newtonsoft.Json;
+using Microsoft.Devices.Tpm;
+
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace Blink
@@ -33,6 +38,9 @@ namespace Blink
         DispatcherTimer mainTimer = null;
 
 
+        static string deviceConnectionString = String.Empty;
+        static DeviceClient Client = null;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -42,10 +50,65 @@ namespace Blink
             mainTimer.Tick += MainTimer_Tick;
             mainTimer.Start();
 
+            // read connection string from tpm
+            ReadTpm();
 
+            // report version data to device twin
+            try
+            {
+                InitClient();
+                ReportVersionToDeviceTwin();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Error in sample: {0}", ex.Message);
+            }                                  
         }
 
-     
+        private void ReadTpm()
+        {
+            TpmDevice tpm = new TpmDevice(0);            
+            deviceConnectionString = tpm.GetConnectionString();
+        }
+
+        public static async void ReportVersionToDeviceTwin()
+        {
+            try
+            {
+                Console.WriteLine("Sending version data as reported property");
+
+                TwinCollection reportedProperties, connectivity;
+                reportedProperties = new TwinCollection();
+                connectivity = new TwinCollection();
+                connectivity["appversion"] = "1.0.#{Build.BuildId}#.0";
+                reportedProperties["connectivity"] = connectivity;
+                await Client.UpdateReportedPropertiesAsync(reportedProperties);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Error in sample: {0}", ex.Message);
+            }
+        }
+
+
+        public static async void InitClient()
+        {
+            try
+            {
+                Console.WriteLine("Connecting to hub");
+                Client = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Mqtt);
+                Console.WriteLine("Retrieving twin");
+                await Client.GetTwinAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Error in sample: {0}", ex.Message);
+            }
+        }
+
 
         private void MainTimer_Tick(object sender, object e)
         {
